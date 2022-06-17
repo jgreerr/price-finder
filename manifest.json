@@ -1,0 +1,17 @@
+{
+    "name": "Price finder",
+    "description": "Find prices.",
+    "version": "0.1.0",
+    "manifest_version": 3,
+    "background": {
+        "service_worker": "background.js"
+    },
+    "options_page": "./options.html",
+    "browser_action": {
+        "defualt_popup": "popup.html"
+    },
+    "permissions": [
+        "storage",
+        "tabs"
+    ]
+}
