@@ -1,17 +1,15 @@
 {
     "name": "Price finder",
     "description": "Find prices.",
-    "version": "0.1.0",
+    "version": "0.0.1",
     "manifest_version": 3,
+    "options_page": "options.html",
     "background": {
         "service_worker": "background.js"
     },
-    "options_page": "./options.html",
-    "browser_action": {
-        "defualt_popup": "popup.html"
+    "action": {
+        "default_popup": "options.html"
     },
-    "permissions": [
-        "storage",
-        "tabs"
-    ]
+    "permissions":["contextMenus"]
+
 }
