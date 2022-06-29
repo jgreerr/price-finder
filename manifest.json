@@ -10,6 +10,14 @@
     "action": {
         "default_popup": "options.html"
     },
-    "permissions":["contextMenus"]
-
+    "permissions":["contextMenus"],
+    "content_scripts": [{
+        "run_at": "document_idle",
+        "matches": [
+            "https://*.ebay.com/*", 
+            "https://*.nbcnews.com/*", 
+            "https://*.nytimes.com/*"
+        ],
+        "js": ["content-script.js"]
+    }]
 }
