@@ -3,14 +3,19 @@
     "description": "Find prices.",
     "version": "0.0.1",
     "manifest_version": 3,
-    "options_page": "options.html",
+    "options_page": "html/options.html",
     "background": {
-        "service_worker": "background.js"
+        "service_worker" : "js/service-workers/background.js"
     },
     "action": {
-        "default_popup": "options.html"
+        "default_popup": "html/popup.html"
     },
-    "permissions":["contextMenus"],
+    "permissions": [
+        "contextMenus",
+        "activeTab",
+        "storage",
+        "scripting"
+    ],
     "content_scripts": [{
         "run_at": "document_idle",
         "matches": [
@@ -20,6 +25,6 @@
             "https://*.walmart.com/*",
             "https://*.newegg.com/*"
         ],
-        "js": ["content-script.js"]
+        "js": ["js/content-scripts/find-section.js"]
     }]
 }
