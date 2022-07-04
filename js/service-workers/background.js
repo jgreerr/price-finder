@@ -92,6 +92,14 @@ chrome.contextMenus.onClicked.addListener(() => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         chrome.tabs.sendMessage(tabs[0].id, "readElement");
     });
+
+    chrome.tabs.create({url : 'html/item-menu.html'});
+    // chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+    //     chrome.scripting.executeScript({
+    //         target : {tabId : tabs[0].id},
+    //         files : ['js/item-menu.js']
+    //     });
+    // });
 });
 
 chrome.tabs.onActivated.addListener(() => chrome.contextMenus.removeAll());

@@ -16,15 +16,17 @@
         "storage",
         "scripting"
     ],
-    "content_scripts": [{
-        "run_at": "document_idle",
-        "matches": [
-            "https://*.ebay.com/*", 
-            "https://*.amazon.com/*",
-            "https://*.bestbuy.com/*",
-            "https://*.walmart.com/*",
-            "https://*.newegg.com/*"
-        ],
-        "js": ["js/content-scripts/find-section.js"]
-    }]
+    "content_scripts": [
+        {
+            "run_at": "document_idle",
+            "matches": [
+                "https://*.ebay.com/*", 
+                "https://*.amazon.com/*",
+                "https://*.bestbuy.com/*",
+                "https://*.walmart.com/*",
+                "https://*.newegg.com/*"
+            ],
+            "js": ["js/content-scripts/content-script.js"]
+        }
+    ]
 }
