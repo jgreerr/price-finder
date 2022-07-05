@@ -1,9 +1,13 @@
 
-console.log("Content script for item display is working.");
-let header = document.createElement('h1');
-header.textContent = "Im injected!";
-document.body.appendChild(header);
-
-chrome.storage.local.get(["validEbayClassNames"], (items) => {
-    console.log(items.validEbayClassNames);
-});
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => { 
+    if (message == "gotListedItem") {
+        console.log("Recieved the gotListedItem message.");
+        chrome.storage.local.get(["selectedListedItem"], (items) => {
+            let selectedItem = document.querySelector(".selected-item-content");
+            let header = document.createElement('h3');
+            header.textContent = "Name: " + items.selectedListedItem.name;
+            header.textContent += " | Price: " + items.selectedListedItem.price;
+            header.textContent += " | Condition: " + items.selectedListedItem.condition;
+            selectedItem.appendChild(header);
+    });
+}});

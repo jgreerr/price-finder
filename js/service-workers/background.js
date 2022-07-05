@@ -52,14 +52,6 @@ chrome.runtime.onInstalled.addListener(() => {
         validIdNames.push(...items.validAmazonIdNames);
         chrome.storage.local.set({"validIdNames" : validIdNames});
     })
-
-    chrome.storage.local.get("validClassNames", items => { 
-        console.log(items.validClassNames);
-    })
-
-    chrome.storage.local.get("validIdNames", items => { 
-        console.log(items.validIdNames);
-    })
 })
 
 
@@ -68,7 +60,6 @@ chrome.runtime.onInstalled.addListener(() => {
 // Context menu creation
 chrome.runtime.onMessage.addListener((message) => {
     if (message == "create_menu") {
-        console.log("Create menu message recieved!");
         chrome.contextMenus.removeAll(() => {
             chrome.contextMenus.create({
                 title : 'Check price', 
@@ -87,19 +78,11 @@ chrome.runtime.onMessage.addListener((message) => {
 
 
 // On click of the context menu item.
-
 chrome.contextMenus.onClicked.addListener(() => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-        chrome.tabs.sendMessage(tabs[0].id, "readElement");
+        chrome.tabs.sendMessage(tabs[0].id, "readElement"); 
     });
-
-    chrome.tabs.create({url : 'html/item-menu.html'});
-    // chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-    //     chrome.scripting.executeScript({
-    //         target : {tabId : tabs[0].id},
-    //         files : ['js/item-menu.js']
-    //     });
-    // });
+    chrome.tabs.create({url : 'html/item-menu.html'});           
 });
 
 chrome.tabs.onActivated.addListener(() => chrome.contextMenus.removeAll());

@@ -1,7 +1,27 @@
 
 let readableElement = null;
 
-chrome.storage.local.get(["validEbayIdNames"], )
+//-----------------------------------------
+
+async function addListeners() {
+    // Read element listener. Sent when the context menu item is clicked.
+    chrome.runtime.onMessage.addListener((message) => {
+        if (message == "readElement") {      
+            readStoreElement(readableElement, (selectedListedItem) => {
+                chrome.storage.local.set({"selectedListedItem" : selectedListedItem}, () => {
+
+                    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+                        chrome.tabs.sendMessage(tabs[0].id, "readElement"); 
+                    });
+                    chrome.runtime.sendMessage("gotListedItem");     
+                    
+                });
+            });
+        }
+
+    });
+}
+
 
 //--- Determine if the context menu is appopriate for the section. 
 
@@ -46,32 +66,11 @@ function _getValidParent(clickedElement, validClassNames, validIdNames) {
     return false;
 }
 
-//-----------------------------------------
-
-function addListeners() {
-    // Read element
-    chrome.runtime.onMessage.addListener((message) => {
-        if (message == "readElement") { 
-            let script = document.createElement('script'); 
-            script.textContent = console.log(readableElement);
-            document.head.appendChild(script);
-            
-            readStoreElement(readableElement);
-    
-    
-            // chrome.storage.local.set({"selectedItem" : {
-            //     itemName : "t", 
-            //     price : "", 
-            //     condition : "",
-            // }});
-        }
-    });
-}
-
 // ----- Reading an element ------
 
-// Reads an HTML element from a variety of sites and returns a Sale Item Object. 
-function readStoreElement(element) { 
+// Reads an HTML element and executes a callback once it has
+// been obtained.
+function readStoreElement(element, callback) { 
     chrome.storage.local.get([
         "validEbayClassNames", 
         "validAmazonClassNames",
@@ -84,38 +83,47 @@ function readStoreElement(element) {
         "validEbayIdNames",
         "validAmazonIdNames"
     ], (items) => {
+
+        let listedItem = { 
+            name : "not found",
+            price : "not found",
+            condition : "not found", 
+            image : "not found",
+        }
+
         // Element is class name.
         if (items.validClassNames.includes(element.className)) {
 
             if (items.validEbayClassNames.includes(element.className)) {
-                return _readEbayClassElement(element); 
+                listedItem = _readEbayClassElement(element, listedItem); 
 
             } else if (items.validAmazonClassNames.includes(element.className)) { 
-                return _readAmazonClassElement(element);
+                listedItem = _readAmazonClassElement(element, listedItem);
 
             } else if (items.BestBuyClassNames.includes(element.className)) { 
-                return _readBestBuyClassElement(element); 
+                _readBestBuyClassElement(element, listedItem); 
 
             } else if (items.validWalmartClassNames.includes(element.className)) {
-                return _readWalmartClassElement(element); 
+                _readWalmartClassElement(element, listedItem); 
 
             } else if (items.validNeweggClassNames.includes(element.className)) {
-                return _readNeweggClassElement(element);
+                _readNeweggClassElement(element, listedItem);
             } 
         } else if (items.validIdNames.includes(element.id)) {
 
             if (items.validEbayIdNames.includes(element.id)) {
-                return _readEbayIdElement(element);  
+                listedItem = _readEbayIdElement(element, listedItem);  
             } else if (items.validAmazonIdNames.includes(element.id)) {
-                return _readAmazonIdElement(element); 
+                _readAmazonIdElement(element, listedItem); 
             }
         } else { 
             console.log("Error!");
         }
+        callback(listedItem);
     })
 }
 
-function _readEbayClassElement(element) { 
+function _readEbayClassElement(element, listedItem) { 
     if (element.className = "s-item__wrapper clearfix") {
         
         let name = element.querySelector("div > div.s-item__info.clearfix > a > h3").textContent;
@@ -132,69 +140,57 @@ function _readEbayClassElement(element) {
         querySelector(".s-item__image-wrapper").
         querySelector(".s-item__image-img").src;
 
-        let saleObject = {
-            name : name,
-            price : price,
-            condition : condition, 
-
-            image : image,
-        }
-
-        console.log(saleObject);
-
-        return saleObject;
+        listedItem.name = name;
+        listedItem.price = price;
+        listedItem.condition = condition; 
+        listedItem.image = image;
+        return listedItem;
     }
 }
 
-function _readAmazonClassElement(element) {
+function _readAmazonClassElement(element, listedItem) {
 
 }
 
-function _readBestBuyClassElement(element) { 
+function _readBestBuyClassElement(element, listedItem) { 
 
 }
 
-function _readWalmartClassElement(element) { 
+function _readWalmartClassElement(element, listedItem) { 
 
 }
 
-function _readNeweggClassElement(element) { 
+function _readNeweggClassElement(element, listedItem) { 
 
 }
 
-function _readEbayIdElement(element) { 
+function _readEbayIdElement(element, listedItem) { 
     if (element.id == "CenterPanelInternal") {
-        let name = document.querySelector("#prcIsum").textContent;
-        let price = document.querySelector("#LeftSummaryPanel > div.vi-swc-lsp > "
+        let name = document.querySelector("#LeftSummaryPanel > div.vi-swc-lsp > "
         + "div:nth-child(1) > div > h1 > span").textContent;
+        let price = document.querySelector("#prcIsum").textContent;
         let condition = document.querySelector("#mainContent > form > div.nonActPanel > div:nth-child(1) > "
         + "div > div.d-item-condition-value > div > div > div > span:nth-child(1) > span").textContent;
 
         let image = document.querySelector("#icImg").src;
         
-        let saleObject = {
-            name : name,
-            price : price,
-            condition : condition, 
-
-            image : image,
-        }
-
-        console.log(saleObject);
-
-        return saleObject;
+        listedItem.name = name;
+        listedItem.price = price;
+        listedItem.condition = condition;
+        listedItem.image = image;
+        return listedItem;
     }
 }
 
-function _readAmazonIdElement(element) { 
+function _readAmazonIdElement(element, listedItem) { 
 
 }
 
 //------------------------------------------------------
 
 function main() {
-    addMouseDownForListItem();
     addListeners();
+    addMouseDownForListItem();
 }
 
 main();
