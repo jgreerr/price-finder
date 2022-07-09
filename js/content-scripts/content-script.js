@@ -3,18 +3,14 @@ let readableElement = null;
 
 //-----------------------------------------
 
-async function addListeners() {
+function addListeners() {
     // Read element listener. Sent when the context menu item is clicked.
     chrome.runtime.onMessage.addListener((message) => {
         if (message == "readElement") {      
             readStoreElement(readableElement, (selectedListedItem) => {
                 chrome.storage.local.set({"selectedListedItem" : selectedListedItem}, () => {
-
-                    chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-                        chrome.tabs.sendMessage(tabs[0].id, "readElement"); 
-                    });
-                    chrome.runtime.sendMessage("gotListedItem");     
-                    
+                    // Create tab once we have parsed the data we need.
+                    chrome.runtime.sendMessage("tab_create");
                 });
             });
         }
@@ -126,20 +122,62 @@ function readStoreElement(element, callback) {
 function _readEbayClassElement(element, listedItem) { 
     if (element.className = "s-item__wrapper clearfix") {
         
-        let name = element.querySelector("div > div.s-item__info.clearfix > a > h3").textContent;
+        let name = "could not parse"
 
-        let condition = element.querySelector("div > div.s-item__info.clearfix > "
-        + "div.s-item__subtitle > span.SECONDARY_INFO").textContent;
-        
-        let price = element.querySelector("div > div.s-item__info.clearfix > "
-        + "div.s-item__details.clearfix > div:nth-child(1) > span").textContent;
+        if (element.querySelector("div > div.s-item__info."
+        + "clearfix > a > h3") !== null) { 
 
+            name = element.querySelector("div > div.s-item__"
+            + "info.clearfix > a > h3").textContent;
+        }
+
+        if (element.querySelector("div > div.s-item__info.clearfix > "
+        + "div.s-item__title-section > a > h3") !== null ) {
+
+            name = element.querySelector("div > div.s-item__info.clearfix "
+            + "> div.s-item__title-section > a > h3").textContent
+        }
+
+        // ----
+
+        let condition = "could not parse";
+
+        if (element.querySelector("div > div.s-item__info.clearfix > "
+        + "div.s-item__subtitle > span.SECONDARY_INFO") !== null) {
+            condition = element.querySelector("div > div.s-item__info.clearfix > "
+            + "div.s-item__subtitle > span.SECONDARY_INFO").textContent;
+        }
+
+        if (element.querySelector("div > div.s-item__info.clearfix > div.s-item__"
+        + "title-section > div.s-item__subtitle > span.SECONDARY_INFO") !== null) {
+            condition = element.querySelector("div > div.s-item__info.clearfix > div.s-item__"
+            + "title-section > div.s-item__subtitle > span.SECONDARY_INFO").textContent;
+        } 
         
-        let image = element.querySelector(".s-item__image-section").
+        // ----
+
+        let price = "could not parse";
+
+        if (element.querySelector("div > div.s-item__info.clearfix > "
+        + "div.s-item__details.clearfix > div:nth-child(1) > span") !== null) {
+            price = element.querySelector("div > div.s-item__info.clearfix > "
+            + "div.s-item__details.clearfix > div:nth-child(1) > span").textContent;
+        }
+       
+        // ----
+
+        let image = "could not parse image "
+
+        if (element.querySelector(".s-item__image-section").
         querySelector(".s-item__image").
         querySelector(".s-item__image-wrapper").
-        querySelector(".s-item__image-img").src;
-
+        querySelector(".s-item__image-img") !== null) {
+            image = element.querySelector(".s-item__image-section").
+            querySelector(".s-item__image").
+            querySelector(".s-item__image-wrapper").
+            querySelector(".s-item__image-img").src;
+        }
+    
         listedItem.name = name;
         listedItem.price = price;
         listedItem.condition = condition; 
@@ -183,7 +221,63 @@ function _readEbayIdElement(element, listedItem) {
 }
 
 function _readAmazonIdElement(element, listedItem) { 
+    if (element.id == "ppd") {
 
+        let name = "could not parse"; 
+        if (document.querySelector("#productTitle") !== null) { 
+            name = document.querySelector("#productTitle").textContent;
+        }
+
+        //------
+
+        let price = "could not parse";
+
+        if (document.querySelector("#corePriceDisplay_desktop_feature_div > div.a-section.a-"
+        + "spacing-none.aok-align-center > span.a-price.aok-align-center.reinventPricePric"
+        + "eToPayMargin.priceToPay > span:nth-child(2) > span.a-price-whole") !== null) {
+
+            price = "$" + document.querySelector("#corePriceDisplay_desktop_feature_div > div.a-section.a-"
+            + "spacing-none.aok-align-center > span.a-price.aok-align-center.reinventPricePric"
+            + "eToPayMargin.priceToPay > span:nth-child(2) > span.a-price-whole").textContent;
+        }    
+
+
+        if (document.querySelector("#corePrice_desktop > div > table > tbody > tr:nth-child(2) > td.a-span12 "
+        + "> span.a-price.a-text-price.a-size-medium.apexPriceToPay > span:nth-child(2)") !== null) { 
+            price = document.querySelector("#corePrice_desktop > div > table > tbody > tr:nth-child(2) > td.a-span12 "
+            + "> span.a-price.a-text-price.a-size-medium.apexPriceToPay > span:nth-child(2)").textContent;
+        }
+
+        // Price range type.
+        if (document.querySelector("#corePrice_desktop > div > table"
+        + " > tbody > tr > td.a-span12 > span.a-price-range" !== null)) { 
+            price = document.querySelector("#corePrice_desktop > div > table > "
+            + "tbody > tr > td.a-span12 > span.a-price-range > span:nth-child(1)").textContent 
+            + document.querySelector("#corePrice_desktop > div > table > "
+            + "tbody > tr > td.a-span12 > span.a-price-range > "
+            + "span:nth-child(3) > span:nth-child(2)").textContent;
+        }
+
+        if (document.querySelector("#sns-base-price") !== null) { 
+            price = document.querySelector("#sns-base-price").textContent;
+            price = price.replace(/\s+/g, '');
+        }
+        
+        //------
+
+        let condition = "New";
+
+        let image = "could not parse";
+        if (document.querySelector("#landingImage") !== null) {
+            image = document.querySelector("#landingImage").src
+        }
+
+        listedItem.name = name;
+        listedItem.price = price;
+        listedItem.condition = condition;
+        listedItem.image = image;
+        return listedItem;
+    }
 }
 
 //------------------------------------------------------

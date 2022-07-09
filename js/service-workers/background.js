@@ -73,6 +73,12 @@ chrome.runtime.onMessage.addListener((message) => {
     }
 })
 
+// Tab creation
+chrome.runtime.onMessage.addListener((message)  => {
+    if (message == "tab_create") {
+        chrome.tabs.create({url : 'html/item-menu.html'});      
+    }
+})
 
 //-----------------------------------------
 
@@ -81,8 +87,7 @@ chrome.runtime.onMessage.addListener((message) => {
 chrome.contextMenus.onClicked.addListener(() => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         chrome.tabs.sendMessage(tabs[0].id, "readElement"); 
-    });
-    chrome.tabs.create({url : 'html/item-menu.html'});           
+    });         
 });
 
 chrome.tabs.onActivated.addListener(() => chrome.contextMenus.removeAll());
