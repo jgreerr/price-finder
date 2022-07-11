@@ -1,0 +1,15 @@
+
+<friendsList> 
+    <friend>
+        <name>Alex </name> 
+    </friend> 
+    <friend>
+        <name>Mary  </name> 
+    </friend> 
+    <friend>
+        <name>Rachael </name> 
+    </friend>
+    <bestFriend>
+        <name>Rachael </name> 
+    </friend> 
+</friendsList>
