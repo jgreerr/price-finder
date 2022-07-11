@@ -91,3 +91,11 @@ chrome.contextMenus.onClicked.addListener(() => {
 });
 
 chrome.tabs.onActivated.addListener(() => chrome.contextMenus.removeAll());
+
+async function fetchEbayListing() { 
+    let response = await fetch("https://www.ebay.com/sch/shoe");
+    let string = await response.text(); 
+    console.log(string);
+}
+
+fetchEbayListing();
