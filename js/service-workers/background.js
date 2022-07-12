@@ -95,7 +95,11 @@ chrome.tabs.onActivated.addListener(() => chrome.contextMenus.removeAll());
 async function fetchEbayListing() { 
     let response = await fetch("https://www.ebay.com/sch/shoe");
     let string = await response.text(); 
+    let start = string.indexOf('<ul class="srp-results srp-grid clearfix">');
+    let end = string.indexOf('</ul>', start);
+    string = string.slice(start, end); 
     console.log(string);
+
 }
 
 fetchEbayListing();
