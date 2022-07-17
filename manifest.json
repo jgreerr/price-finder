@@ -26,7 +26,10 @@
                 "https://*.walmart.com/*",
                 "https://*.newegg.com/*"
             ],
-            "js": ["js/content-scripts/content-script.js"]
+            "js": [
+                "/js/content-scripts/content-script.js", 
+                "/js/content-scripts/read-store-element.js"
+            ]
         }
     ]
 }

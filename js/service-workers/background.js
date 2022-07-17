@@ -1,4 +1,3 @@
-// On instllation
 
 chrome.runtime.onInstalled.addListener(() => { 
 
@@ -74,7 +73,7 @@ chrome.runtime.onMessage.addListener((message) => {
 })
 
 // Tab creation
-chrome.runtime.onMessage.addListener((message)  => {
+chrome.runtime.onMessage.addListener((message) => {
     if (message == "tab_create") {
         chrome.tabs.create({url : 'html/item-menu.html'});      
     }
