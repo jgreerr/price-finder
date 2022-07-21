@@ -1,19 +1,36 @@
-
-function displaySelectedListedItem() { 
-    chrome.storage.local.get(["selectedListedItem"], (items) => {
+function displayListedItem(listedItem, exist) {
+    if (exist == true){
         let selectedItem = document.querySelector(".selected-item-content");
-    
+
         let image = document.getElementById("selected-item-image");
-        image.src = items.selectedListedItem.image;
-    
+        image.src = listedItem.image;
+
         let header = document.getElementById("selected-item-text");
-        header.textContent = "Name: " + items.selectedListedItem.name;
-        header.textContent += " | Price: " + items.selectedListedItem.price;
-        header.textContent += " | Condition: " + items.selectedListedItem.condition;
-    
+        header.textContent = "Name: " + listedItem.name;
+        header.textContent += " | Price: " + listedItem.price;
+        header.textContent += " | Condition: " + listedItem.condition;
+
         selectedItem.appendChild(image);
         selectedItem.appendChild(header);
-    })   
+    } else { 
+        let div = document.createElement('div');
+        div.className = 'listed-item-content';
+
+        let image = document.createElement('img'); 
+        image.className = 'listed-item-image';
+        image.src = listedItem.image;
+        div.appendChild(image);
+        document.body.appendChild(image);
+        document.head.appendChild(image);
+
+        let header = document.createElement('h1');
+        header.className = 'listed-item-text'
+        header.textContent = "Name: " + listedItem.name;
+        header.textContent += " | Price: " + listedItem.price;
+        header.textContent += " | Condition: " + listedItem.condition;
+        div.appendChild(header);
+        document.body.appendChild(div);
+    }
 }
 
 async function fetchEbayListing() { 
@@ -43,9 +60,14 @@ async function fetchEbayListing() {
 
 
 async function main() { 
-    displaySelectedListedItem();
+    let items = await chrome.storage.local.get(["selectedListedItem"]);
+    let selectedListedItem = items.selectedListedItem;
+    displayListedItem(selectedListedItem, true);
     let ebayListedItems = await fetchEbayListing();
-    console.log(ebayListedItems);
+    console.log(typeof ebayListedItems);
+    for (let i = 0; i < ebayListedItems.length; i++) { 
+        console.log(ebayListedItems[i]);
+    }
 }
 
 main(); 

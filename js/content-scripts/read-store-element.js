@@ -185,6 +185,17 @@ function _readAmazonIdElement(element, listedItem) {
             + "eToPayMargin.priceToPay > span:nth-child(2) > span.a-price-whole").textContent;
         }    
 
+        if (document.querySelector("#priceblock_pospromoprice") !== null) { 
+            price = document.querySelector("#priceblock_pospromoprice").textContent;
+        }
+
+        if (document.querySelector("#corePrice_desktop > div > table > tbody > tr > " +
+        "td.a-span12 > span.a-price.a-text-price.a-size-medium.apexPriceToPay > span:nth-child(2)")
+        !== null) {
+            price = document.querySelector("#corePrice_desktop > div > table > tbody > tr > " +
+            "td.a-span12 > span.a-price.a-text-price.a-size-medium.apexPriceToPay > span:nth-child(2)")
+            .textContent;
+        }
 
         if (document.querySelector("#corePrice_desktop > div > table > tbody > tr:nth-child(2) > td.a-span12 "
         + "> span.a-price.a-text-price.a-size-medium.apexPriceToPay > span:nth-child(2)") !== null) { 
