@@ -1,17 +1,17 @@
-.selected-item-content { 
+.listed-item-content { 
     border: 3px solid black;
     position: relative;
     height: 150px;
 }
 
-#selected-item-image {
+.listed-item-image {
     display: inline-block;
     position: absolute;
     max-width: 100%;
     max-height: 100%;
 }
 
-#selected-item-text {
+.listed-item-text {
     display: inline-block;
     position: absolute;
     padding-top: 50px;

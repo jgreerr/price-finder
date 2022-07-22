@@ -1,8 +1,9 @@
 
 // Reads a store element from various sites and returns 
 // a JSON file that can be displayed anywhere.
-function readStoreElement(element, callback) { 
-    chrome.storage.local.get([
+async function readStoreElement(element) { 
+
+    const items = await chrome.storage.local.get([
         "validEbayClassNames", 
         "validAmazonClassNames",
         "validBestBuyClassNames",
@@ -13,51 +14,51 @@ function readStoreElement(element, callback) {
         "validIdNames",
         "validEbayIdNames",
         "validAmazonIdNames"
-    ], (items) => {
+    ]);
 
-        let listedItem = { 
-            name : "not found",
-            price : "not found",
-            condition : "not found", 
-            image : "not found",
-            status : "not read"
-        };
+    const listedItem = { 
+        name : "not found",
+        price : "not found",
+        condition : "not found", 
+        image : "not found",
+        link : "not found",
+        status : "not read"
+    };
 
-        // Element is class name.
-        if (items.validClassNames.includes(element.className)) {
+    // Element is class name.
+    if (items.validClassNames.includes(element.className)) {
 
-            if (items.validEbayClassNames.includes(element.className)) {
-                listedItem = _readEbayClassElement(element, listedItem); 
-                listedItem.status = "succeeded";
-            } else if (items.validAmazonClassNames.includes(element.className)) { 
-                listedItem = _readAmazonClassElement(element, listedItem);
-                listedItem.status = "succeeded";
-            } else if (items.BestBuyClassNames.includes(element.className)) { 
-                listedItem = _readBestBuyClassElement(element, listedItem); 
-                listedItem.status = "succeeded";
+        if (items.validEbayClassNames.includes(element.className)) {
+            _readEbayClassElement(element, listedItem); 
+            listedItem.status = "succeeded";
+        } else if (items.validAmazonClassNames.includes(element.className)) { 
+            _readAmazonClassElement(element, listedItem);
+            listedItem.status = "succeeded";
+        } else if (items.BestBuyClassNames.includes(element.className)) { 
+            _readBestBuyClassElement(element, listedItem); 
+            listedItem.status = "succeeded";
 
-            } else if (items.validWalmartClassNames.includes(element.className)) {
-                listedItem =_readWalmartClassElement(element, listedItem); 
-                listedItem.status = "succeeded";
+        } else if (items.validWalmartClassNames.includes(element.className)) {
+            _readWalmartClassElement(element, listedItem); 
+            listedItem.status = "succeeded";
 
-            } else if (items.validNeweggClassNames.includes(element.className)) {
-                listedItem =_readNeweggClassElement(element, listedItem);
-                listedItem.status = "succeeded";
-            } 
-        } else if (items.validIdNames.includes(element.id)) {
+        } else if (items.validNeweggClassNames.includes(element.className)) {
+            _readNeweggClassElement(element, listedItem);
+            listedItem.status = "succeeded";
+        } 
+    } else if (items.validIdNames.includes(element.id)) {
 
-            if (items.validEbayIdNames.includes(element.id)) {
-                listedItem = _readEbayIdElement(element, listedItem);  
-                listedItem.status = "succeeded";
-            } else if (items.validAmazonIdNames.includes(element.id)) {
-                listedItem =_readAmazonIdElement(element, listedItem); 
-                listedItem.status = "succeeded";
-            }
-        } else { 
-            listedItem.status = "failed"; 
+        if (items.validEbayIdNames.includes(element.id)) {
+            _readEbayIdElement(element, listedItem);  
+            listedItem.status = "succeeded";
+        } else if (items.validAmazonIdNames.includes(element.id)) {
+            _readAmazonIdElement(element, listedItem); 
+            listedItem.status = "succeeded";
         }
-        callback(listedItem);
-    })
+    } else { 
+        listedItem.status = "failed"; 
+    }
+    return listedItem;
 }
 
 function _readEbayClassElement(element, listedItem) { 
@@ -118,12 +119,18 @@ function _readEbayClassElement(element, listedItem) {
             querySelector(".s-item__image-wrapper").
             querySelector(".s-item__image-img").src;
         }
+
+        let link = "could not parse" 
+
+        if (element.querySelector("div > div.s-item__info.clearfix > a") !== null) { 
+            link = element.querySelector("div > div.s-item__info.clearfix > a").href;
+        } 
     
         listedItem.name = name;
         listedItem.price = price;
         listedItem.condition = condition; 
         listedItem.image = image;
-        return listedItem;
+        listedItem.link = link;
     }
 }
 
@@ -157,7 +164,6 @@ function _readEbayIdElement(element, listedItem) {
         listedItem.price = price;
         listedItem.condition = condition;
         listedItem.image = image;
-        return listedItem;
     }
 }
 
@@ -231,6 +237,5 @@ function _readAmazonIdElement(element, listedItem) {
         listedItem.price = price;
         listedItem.condition = condition;
         listedItem.image = image;
-        return listedItem;
     }
 }

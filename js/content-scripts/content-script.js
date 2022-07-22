@@ -2,19 +2,17 @@ let readableElement = null;
 
 //-----------------------------------------
 
-function addListeners() {
+async function addListeners() {
     // Read element listener. Sent when the context menu item is clicked.
-    chrome.runtime.onMessage.addListener((message) => {
+    chrome.runtime.onMessage.addListener(async (message) => {
         if (message == "readElement") {  
-            readStoreElement(readableElement, (selectedListedItem) => {
-                chrome.storage.local.set({"selectedListedItem" : selectedListedItem}, () => {
-                    // Create tab once we have parsed the data we need.
-                    chrome.runtime.sendMessage("tab_create");
-                });
-            });     
+            let selectedListedItem = await readStoreElement(readableElement);
+            chrome.storage.local.set({"selectedListedItem" : selectedListedItem});
+            chrome.runtime.sendMessage("tab_create");  
         }
     });
 }
+
 
 
 //--- Determine if the context menu is appopriate for the section. 
@@ -61,7 +59,7 @@ function _getValidParent(clickedElement, validClassNames, validIdNames) {
 
 //------------------------------------------------------
 
-function main() {
+async function main() {
     addListeners();
     addMouseDownForListItem();
 }

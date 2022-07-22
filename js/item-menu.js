@@ -1,17 +1,21 @@
 function displayListedItem(listedItem, exist) {
     if (exist == true){
-        let selectedItem = document.querySelector(".selected-item-content");
+        let selectedItem = document.querySelector(".listed-item-content");
 
-        let image = document.getElementById("selected-item-image");
+        let image = document.querySelector(".listed-item-image");
         image.src = listedItem.image;
 
-        let header = document.getElementById("selected-item-text");
+        let a = document.createElement('a');
+        a.href = listedItem.link;
+        let header = document.querySelector(".listed-item-text");
         header.textContent = "Name: " + listedItem.name;
         header.textContent += " | Price: " + listedItem.price;
         header.textContent += " | Condition: " + listedItem.condition;
+        a.appendChild(header);
 
         selectedItem.appendChild(image);
-        selectedItem.appendChild(header);
+
+        selectedItem.appendChild(a);
     } else { 
         let div = document.createElement('div');
         div.className = 'listed-item-content';
@@ -20,22 +24,23 @@ function displayListedItem(listedItem, exist) {
         image.className = 'listed-item-image';
         image.src = listedItem.image;
         div.appendChild(image);
-        document.body.appendChild(image);
-        document.head.appendChild(image);
 
+        let a = document.createElement('a');
+        a.href = listedItem.link;
         let header = document.createElement('h1');
-        header.className = 'listed-item-text'
+        header.className = 'listed-item-text';
         header.textContent = "Name: " + listedItem.name;
         header.textContent += " | Price: " + listedItem.price;
         header.textContent += " | Condition: " + listedItem.condition;
-        div.appendChild(header);
+        a.appendChild(header);
+        div.appendChild(a);
         document.body.appendChild(div);
     }
 }
 
 async function fetchEbayListing() { 
 
-    let listedItems = []; 
+    const listedItems = []; 
 
     let items = await chrome.storage.local.get(["selectedListedItem"]);
     let selectedListedItem = items.selectedListedItem;
@@ -48,13 +53,14 @@ async function fetchEbayListing() {
     .getElementsByTagName('li')
 
     for (let i = 0; i < list.length; i++) { 
-        readStoreElement(list[i], (listedItem) => { 
-            if (listedItem.status == "succeeded") { 
-                listedItems.push(listedItem);
-            }
-        });
+        let listedItem = await readStoreElement(list[i]); 
+        console.log("Item number " + i + " is being read.")
+        if (listedItem.status == "succeeded") { 
+            listedItems.push(listedItem);
+            console.log("Item number "+ i + " succeeded.");
+        }
     }
-
+    listedItems.push("test");
     return listedItems;
 }
 
@@ -64,9 +70,9 @@ async function main() {
     let selectedListedItem = items.selectedListedItem;
     displayListedItem(selectedListedItem, true);
     let ebayListedItems = await fetchEbayListing();
-    console.log(typeof ebayListedItems);
-    for (let i = 0; i < ebayListedItems.length; i++) { 
-        console.log(ebayListedItems[i]);
+    console.log(ebayListedItems);
+    for (const listedItem of ebayListedItems) { 
+        displayListedItem(listedItem, false);
     }
 }
 
