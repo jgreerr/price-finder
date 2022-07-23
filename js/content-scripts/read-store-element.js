@@ -135,6 +135,23 @@ function _readEbayClassElement(element, listedItem) {
 }
 
 function _readAmazonClassElement(element, listedItem) {
+    let name = "could not parse"
+    let condition = "could not parse";
+    let price = "could not parse";
+    let image = "could not parse image "
+    let link = "could not parse" 
+
+    element.querySelector("div > span:nth-child(4) > div.s-main-slot.s-result-list.s-search-results.sg-row "+
+    "> div:nth-child(4) > div > div > div > div > div.a-section.a-spacing-small.s-padding-left-micro.s-padding-right-micro "+
+    "> div.a-section.a-spacing-none.a-spacing-top-small.s-title-instructions-style > h2 > a > span");
+
+    listedItem.name = name;
+    listedItem.price = price;
+    listedItem.condition = condition; 
+    listedItem.image = image;
+    listedItem.link = link;
+
+
 
 }
 
