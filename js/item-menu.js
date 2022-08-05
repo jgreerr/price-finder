@@ -8,7 +8,7 @@ function displayListedItem(listedItem, exist) {
         let a = document.createElement('a');
         a.href = listedItem.link;
         let header = document.querySelector(".listed-item-text");
-        header.textContent = "Name: " + listedItem.name;
+        header.textContent += listedItem.name;
         header.textContent += " | Price: " + listedItem.price;
         header.textContent += " | Condition: " + listedItem.condition;
         a.appendChild(header);
@@ -29,7 +29,7 @@ function displayListedItem(listedItem, exist) {
         a.href = listedItem.link;
         let header = document.createElement('h1');
         header.className = 'listed-item-text';
-        header.textContent = "Name: " + listedItem.name;
+        header.textContent += listedItem.name;
         header.textContent += " | Price: " + listedItem.price;
         header.textContent += " | Condition: " + listedItem.condition;
         a.appendChild(header);
@@ -91,6 +91,10 @@ async function main() {
     let amazonListedItems = await fetchListedItems("amazon");
     console.log(amazonListedItems);
     for (const listedItem of ebayListedItems) { 
+        displayListedItem(listedItem, false);
+    }
+
+    for (const listedItem of amazonListedItems) { 
         displayListedItem(listedItem, false);
     }
 }

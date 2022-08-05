@@ -135,15 +135,38 @@ function _readEbayClassElement(element, listedItem) {
 }
 
 function _readAmazonClassElement(element, listedItem) {
-    let name = "could not parse"
+    let name = "could not parse";
     let condition = "could not parse";
     let price = "could not parse";
-    let image = "could not parse image "
-    let link = "could not parse" 
+    let image = "could not parse image ";
+    let link = "could not parse";
 
-    element.querySelector("div > span:nth-child(4) > div.s-main-slot.s-result-list.s-search-results.sg-row "+
-    "> div:nth-child(4) > div > div > div > div > div.a-section.a-spacing-small.s-padding-left-micro.s-padding-right-micro "+
-    "> div.a-section.a-spacing-none.a-spacing-top-small.s-title-instructions-style > h2 > a > span");
+    if (element.querySelector("div > div > div > div > div.a-section.a-spacing-"
+    +"small.puis-padding-left-micro.puis-padding-right-micro > div.a-section.a-spacing-none.a-"
+    + "spacing-top-small.s-title-instructions-style > h2 > a > span") !== null) {
+
+        name = element.querySelector("div > div > div > div > div.a-section.a-spacing-"
+        +"small.puis-padding-left-micro.puis-padding-right-micro > div.a-section.a-spacing-none.a-"
+        + "spacing-top-small.s-title-instructions-style > h2 > a > span").textContent;
+    }
+  
+    if (element.querySelector("div > div > div > div > div.a-section.a-spacing-small."
+    +"puis-padding-left-micro.puis-padding-right-micro > div.a-section.a-spacing-none.a-sp"
+    +"acing-top-small.s-price-instructions-style > div > a > span:nth-child(1) > span.a-offscreen") !== null) {
+
+        price = element.querySelector("div > div > div > div > div.a-section.a-spacing-small."
+        +"puis-padding-left-micro.puis-padding-right-micro > div.a-section.a-spacing-none.a-sp"
+        +"acing-top-small.s-price-instructions-style > div > a > span:nth-child(1) > span.a-offscreen").textContent;
+    }
+
+    if (element.querySelector("div > div > div > div > div.s-product-image-container.aok-re"
+    +"lative.s-image-overlay-grey.s-text-center.s-padding-left-small.s-padding-right-sma"
+    +"ll.puis-spacing-small.s-height-equalized > div > span > a > div > img") !== null) {
+
+        image = element.querySelector("div > div > div > div > div.s-product-image-container.aok-re"
+        +"lative.s-image-overlay-grey.s-text-center.s-padding-left-small.s-padding-right-sma"
+        +"ll.puis-spacing-small.s-height-equalized > div > span > a > div > img").src;
+    }
 
     listedItem.name = name;
     listedItem.price = price;

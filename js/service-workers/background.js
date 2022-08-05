@@ -12,7 +12,8 @@ chrome.runtime.onInstalled.addListener(() => {
         + "s-include-content-margin s-latency-cf-section s-card-border",
         "sg-row",
         "sg-col-4-of-12 s-result-item s-asin sg-col-4-of-16 " +
-        "AdHolder sg-col s-widget-spacing-small sg-col-4-of-20"
+        "sg-col s-widget-spacing-small sg-col-4-of-20"
+        
     ]});
 
     chrome.storage.local.set({"validBestBuyClassNames": [ 
