@@ -10,12 +10,15 @@ function displayListedItem(listedItem) {
     let a = document.createElement('a');
     a.href = listedItem.link;
     let header = document.createElement('h1');
-    header.className = 'listed-item-text';
+    header.className = 'listed-item-header';
     header.textContent += listedItem.name;
-    header.textContent += " | Price: " + listedItem.price;
-    header.textContent += " | Condition: " + listedItem.condition;
+    let paragraph = document.createElement('p');
+    paragraph.textContent += "Price: " + listedItem.price;
+    paragraph.textContent += " Condition: " + listedItem.condition;
+    paragraph.className = 'listed-item-desc'
     a.appendChild(header);
     div.appendChild(a);
+    div.appendChild(paragraph);
     document.querySelector("#items-list").appendChild(div);
 
 }
