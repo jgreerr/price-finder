@@ -22,6 +22,7 @@ async function readStoreElement(element) {
         condition : "not found", 
         image : "not found",
         link : "not found",
+        websiteType : "not found",
         status : "not read"
     };
 
@@ -131,6 +132,7 @@ function _readEbayClassElement(element, listedItem) {
         listedItem.condition = condition; 
         listedItem.image = image;
         listedItem.link = link;
+        listedItem.websiteType = "ebay"
     }
 }
 
@@ -167,14 +169,20 @@ function _readAmazonClassElement(element, listedItem) {
         +"lative.s-image-overlay-grey.s-text-center.s-padding-left-small.s-padding-right-sma"
         +"ll.puis-spacing-small.s-height-equalized > div > span > a > div > img").src;
     }
+    if (element.querySelector("div > div > div > div > div.a-section.a-spacing-small.puis-p"
+    +"adding-left-micro.puis-padding-right-micro > div.a-section.a-spacing-none.a-spacing-to"
+    +"p-small.s-title-instructions-style > h2 > a")) {
+        link = element.querySelector("div > div > div > div > div.a-section.a-spacing-small.puis-p"
+        +"adding-left-micro.puis-padding-right-micro > div.a-section.a-spacing-none.a-spacing-to"
+        +"p-small.s-title-instructions-style > h2 > a").href;
+    }
 
     listedItem.name = name;
     listedItem.price = price;
     listedItem.condition = condition; 
     listedItem.image = image;
     listedItem.link = link;
-
-
+    listedItem.websiteType = "amazon"
 
 }
 
@@ -204,6 +212,7 @@ function _readEbayIdElement(element, listedItem) {
         listedItem.price = price;
         listedItem.condition = condition;
         listedItem.image = image;
+        listedItem.websiteType = "ebay"
     }
 }
 
@@ -277,5 +286,6 @@ function _readAmazonIdElement(element, listedItem) {
         listedItem.price = price;
         listedItem.condition = condition;
         listedItem.image = image;
+        listedItem.websiteType = "amazon"
     }
 }

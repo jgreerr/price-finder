@@ -1,41 +1,23 @@
-function displayListedItem(listedItem, exist) {
-    if (exist == true){
-        let selectedItem = document.querySelector(".listed-item-content");
+function displayListedItem(listedItem) {
+    let div = document.createElement('div');
+    div.className = 'listed-item-content';
 
-        let image = document.querySelector(".listed-item-image");
-        image.src = listedItem.image;
+    let image = document.createElement('img'); 
+    image.className = 'listed-item-image';
+    image.src = listedItem.image;
+    div.appendChild(image);
 
-        let a = document.createElement('a');
-        a.href = listedItem.link;
-        let header = document.querySelector(".listed-item-text");
-        header.textContent += listedItem.name;
-        header.textContent += " | Price: " + listedItem.price;
-        header.textContent += " | Condition: " + listedItem.condition;
-        a.appendChild(header);
+    let a = document.createElement('a');
+    a.href = listedItem.link;
+    let header = document.createElement('h1');
+    header.className = 'listed-item-text';
+    header.textContent += listedItem.name;
+    header.textContent += " | Price: " + listedItem.price;
+    header.textContent += " | Condition: " + listedItem.condition;
+    a.appendChild(header);
+    div.appendChild(a);
+    document.querySelector("#items-list").appendChild(div);
 
-        selectedItem.appendChild(image);
-
-        selectedItem.appendChild(a);
-    } else { 
-        let div = document.createElement('div');
-        div.className = 'listed-item-content';
-
-        let image = document.createElement('img'); 
-        image.className = 'listed-item-image';
-        image.src = listedItem.image;
-        div.appendChild(image);
-
-        let a = document.createElement('a');
-        a.href = listedItem.link;
-        let header = document.createElement('h1');
-        header.className = 'listed-item-text';
-        header.textContent += listedItem.name;
-        header.textContent += " | Price: " + listedItem.price;
-        header.textContent += " | Condition: " + listedItem.condition;
-        a.appendChild(header);
-        div.appendChild(a);
-        document.body.appendChild(div);
-    }
 }
 
 async function fetchListedItems(type) { 
@@ -85,17 +67,17 @@ async function fetchListedItems(type) {
 async function main() { 
     let items = await chrome.storage.local.get(["selectedListedItem"]);
     let selectedListedItem = items.selectedListedItem;
-    displayListedItem(selectedListedItem, true);
+    displayListedItem(selectedListedItem);
     let ebayListedItems = await fetchListedItems("ebay");
     console.log(ebayListedItems);
     let amazonListedItems = await fetchListedItems("amazon");
     console.log(amazonListedItems);
     for (const listedItem of ebayListedItems) { 
-        displayListedItem(listedItem, false);
+        displayListedItem(listedItem);
     }
 
     for (const listedItem of amazonListedItems) { 
-        displayListedItem(listedItem, false);
+        displayListedItem(listedItem);
     }
 }
 
