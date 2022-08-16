@@ -4,7 +4,12 @@ html, body {
     background-color: rgb(49, 54, 83);
 }
 
-#selected-item {
+.roboto-font { 
+    font-family: 'Roboto', sans-serif;
+    color: rgb(255, 255, 255);
+}
+
+#left-box {
     z-index: 100;
     width: 20%;
     left: 5px;
@@ -12,9 +17,33 @@ html, body {
     position: fixed;
     border-radius: 20px;
     background-color: rgb(45, 42, 68);
+    text-align: center;
 }
 
-#items-list { 
+#selected-item-image {
+    top: 15px;
+    border-radius: 15px;
+    position: relative;
+    max-width: 50%;
+}
+
+#selected-item-name {
+    position: relative;
+    text-align: center;
+    color:rgb(121, 164, 255);
+}
+
+#selected-item-price {
+    text-align: center;
+    font-size: medium;
+}
+
+#selected-item-condition { 
+    text-align: center;
+    font-size: medium;
+}
+
+#right-box { 
     position: relative;
     left: 300px;
     width: 80%;
@@ -40,14 +69,12 @@ html, body {
 }
 
 .listed-item-header {
-    font-family: 'Roboto', sans-serif;
     display: inline-block;
     position: absolute;
     left: 150px;
     top: 20px;
     max-width: 100%;
     max-height: 100%;
-    color: rgb(255, 255, 255)
 } 
 
 .listed-item-header:hover {
@@ -57,8 +84,12 @@ html, body {
 .listed-item-desc { 
     display: inline-block;
     position: absolute;
-    font-family: 'Roboto', sans-serif;
     font-size: medium;
     left: 150px;
     top: 55px;
+}
+
+.listed-item-website-type-image {
+    position: relative;
+    left: 90%;
 }

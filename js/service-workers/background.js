@@ -54,6 +54,8 @@ chrome.runtime.onInstalled.addListener(() => {
         validIdNames.push(...items.validAmazonIdNames);
         chrome.storage.local.set({"validIdNames" : validIdNames});
     })
+
+    chrome.storage.local.set({"ebayIcon" : "ebay480.png"});
 })
 
 

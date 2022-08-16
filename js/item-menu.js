@@ -1,4 +1,15 @@
-function displayListedItem(listedItem) {
+function displaySelectedItem(selectedItem) { 
+    let selectedItemImage = document.querySelector("#selected-item-image");
+    let selectedItemName = document.querySelector("#selected-item-name");
+    let selectedItemPrice = document.querySelector("#selected-item-price");
+    let selectedItemCondition = document.querySelector("#selected-item-condition");
+
+    selectedItemImage.src = selectedItem.image; 
+    selectedItemName.textContent = selectedItem.name;
+    selectedItemPrice.textContent = selectedItem.price;
+    selectedItemCondition.textContent = selectedItem.condition;
+}
+async function displayListedItem(listedItem) {
     let div = document.createElement('div');
     div.className = 'listed-item-content';
 
@@ -9,19 +20,31 @@ function displayListedItem(listedItem) {
 
     let a = document.createElement('a');
     a.href = listedItem.link;
+
     let header = document.createElement('h1');
-    header.className = 'listed-item-header';
+    header.className = 'listed-item-header roboto-font';
     header.textContent += listedItem.name;
+
     let paragraph = document.createElement('p');
     paragraph.textContent += "Price: " + listedItem.price;
     paragraph.textContent += " Condition: " + listedItem.condition;
-    paragraph.className = 'listed-item-desc'
+    paragraph.className = 'listed-item-desc roboto-font'
+
+    let items = await chrome.storage.local.get(["ebayIcon"]);
+    let ebayIcon = items.ebayIcon;
+    let typeImage = document.createElement('img');
+    typeImage.src = ebayIcon;
+    typeImage.alt = "Icon Failed to Load."
+    typeImage.className = "listed-item-website-type-image"
+
+
     a.appendChild(header);
     div.appendChild(a);
     div.appendChild(paragraph);
-    document.querySelector("#items-list").appendChild(div);
-
+    div.appendChild(typeImage);
+    document.querySelector("#right-box").appendChild(div);
 }
+
 
 async function fetchListedItems(type) { 
 
@@ -30,7 +53,7 @@ async function fetchListedItems(type) {
     let items = await chrome.storage.local.get(["selectedListedItem"]);
     let selectedListedItem = items.selectedListedItem;
     let parser = new DOMParser();
-
+    
     let list = [];
 
     if (type == "ebay") {
@@ -70,11 +93,9 @@ async function fetchListedItems(type) {
 async function main() { 
     let items = await chrome.storage.local.get(["selectedListedItem"]);
     let selectedListedItem = items.selectedListedItem;
-    displayListedItem(selectedListedItem);
+    displaySelectedItem(selectedListedItem);
     let ebayListedItems = await fetchListedItems("ebay");
-    console.log(ebayListedItems);
     let amazonListedItems = await fetchListedItems("amazon");
-    console.log(amazonListedItems);
     for (const listedItem of ebayListedItems) { 
         displayListedItem(listedItem);
     }
