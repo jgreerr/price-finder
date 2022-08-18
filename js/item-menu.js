@@ -30,10 +30,8 @@ async function displayListedItem(listedItem) {
     paragraph.textContent += " Condition: " + listedItem.condition;
     paragraph.className = 'listed-item-desc roboto-font'
 
-    let items = await chrome.storage.local.get(["ebayIcon"]);
-    let ebayIcon = items.ebayIcon;
     let typeImage = document.createElement('img');
-    typeImage.src = ebayIcon;
+    typeImage.src = chrome.runtime.getURL("/resources/" + listedItem.websiteType + ".png");
     typeImage.alt = "Icon Failed to Load."
     typeImage.className = "listed-item-website-type-image"
 
@@ -91,16 +89,15 @@ async function fetchListedItems(type) {
 }
 
 async function main() { 
+
     let items = await chrome.storage.local.get(["selectedListedItem"]);
     let selectedListedItem = items.selectedListedItem;
     displaySelectedItem(selectedListedItem);
+
     let ebayListedItems = await fetchListedItems("ebay");
     let amazonListedItems = await fetchListedItems("amazon");
-    for (const listedItem of ebayListedItems) { 
-        displayListedItem(listedItem);
-    }
-
-    for (const listedItem of amazonListedItems) { 
+    let listedItems = ebayListedItems.concat(amazonListedItems);
+    for (const listedItem of listedItems) { 
         displayListedItem(listedItem);
     }
 }

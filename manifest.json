@@ -31,5 +31,11 @@
                 "/js/content-scripts/read-store-element.js"
             ]
         }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["/resources/*"], 
+            "matches": ["https://web-accessible-resources-2.glitch.me/*"]
+        }
     ]
 }
